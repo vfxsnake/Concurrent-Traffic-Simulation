@@ -22,7 +22,7 @@ Throughout the Concurrency course, you have been developing a traffic simulation
 
 ## Basic Build Instructions
 
-1. Clone this repo.
+1. Clone this repo <https://github.com/vfxsnake/Concurrent-Traffic-Simulation.git>.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./traffic_simulation`.
