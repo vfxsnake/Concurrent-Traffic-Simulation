@@ -53,9 +53,23 @@ void TrafficLight::cycleThroughPhases()
     // and toggles the current phase of the traffic light between red and green and sends an update method 
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
-    if(getCurrentPhase()== TrafficLightPhase::red)
-        _currentPhase = TrafficLightPhase::green;
-        return;
-    _currentPhase = TrafficLightPhase::red;
+    int min_cycle = 4000;
+    int max_cycle = 6000;
+    std::default_random_engine random_generator;
+    std::uniform_int_distribution<int> random_distribution(min_cycle, max_cycle);
+
+    // generates a uniform distribution from the min(4000) and max(6000) values..
+    int rand_cycle = random_distribution(random_generator);
+    auto timer_start = std::chrono::system_clock::now();
+    
+    while (true)
+    {
+        if ((std::chrono::system_clock::now() - timer_start) >= std::chrono::milliseconds(rand_cycle))
+        {
+            _currentPhase = getCurrentPhase() == TrafficLightPhase::red ? TrafficLightPhase::green : TrafficLightPhase::red;
+            timer_start = std::chrono::system_clock::now();
+        } 
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 }
 
