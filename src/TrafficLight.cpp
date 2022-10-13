@@ -74,7 +74,8 @@ void TrafficLight::cycleThroughPhases()
     std::random_device random_device;
     std::mt19937 engine(random_device());
     std::uniform_int_distribution<> uniform_distribution(4000, 6000);
-    // duration of a single simulation cycle in seconds
+    
+    // duration of a single simulation cycle in milliseconds.
     int cycle_duration = uniform_distribution(engine);
 
     // start clock
