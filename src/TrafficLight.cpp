@@ -76,11 +76,13 @@ void TrafficLight::cycleThroughPhases()
 
     // generates a uniform distribution from the min(4000) and max(6000) values..
     int rand_cycle = random_distribution(random_generator);
+    std::cout << rand_cycle << std::endl;
     auto timer_start = std::chrono::system_clock::now();
     
     while (true)
     {
-        if ((std::chrono::system_clock::now() - timer_start) >= std::chrono::milliseconds(rand_cycle))
+        std::cout << (std::chrono::system_clock::now() - timer_start).count() << std::endl;
+        if ((std::chrono::system_clock::now() - timer_start).count() >= rand_cycle)
         {
             _currentPhase = getCurrentPhase() == TrafficLightPhase::red ? TrafficLightPhase::green : TrafficLightPhase::red;
             timer_start = std::chrono::system_clock::now();
