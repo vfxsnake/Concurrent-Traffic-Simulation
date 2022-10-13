@@ -69,25 +69,32 @@ void TrafficLight::cycleThroughPhases()
     // and toggles the current phase of the traffic light between red and green and sends an update method 
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
-    int min_cycle = 4000;
-    int max_cycle = 6000;
-    std::default_random_engine random_generator;
-    std::uniform_int_distribution<int> random_distribution(min_cycle, max_cycle);
 
-    // generates a uniform distribution from the min(4000) and max(6000) values..
-    int rand_cycle = random_distribution(random_generator);
-    std::cout << "rando_cycle: " <<rand_cycle << std::endl;
-    auto timer_start = std::chrono::system_clock::now();
-    return;
-    
-    while (true)
-    {
-        // std::cout << "difference time" << (std::chrono::system_clock::now() - timer_start).count() << std::endl;
-        if ((std::chrono::system_clock::now() - timer_start).count() >= rand_cycle)
+    // initalize variables
+    std::random_device random_device;
+    std::mt19937 engine(random_device());
+    std::uniform_int_distribution<> uniform_distribution(4000, 6000);
+    // duration of a single simulation cycle in seconds
+    int cycle_duration = uniform_distribution(engine);
+
+    // start clock
+    auto start_time = std::chrono::system_clock::now();
+    while (true) {
+        // lap time
+        auto lap_time = std::chrono::system_clock::now() - start_time;
+        if (lap_time.count() >= cycle_duration) 
         {
-            _currentPhase = getCurrentPhase() == TrafficLightPhase::red ? TrafficLightPhase::green : TrafficLightPhase::red;
-            timer_start = std::chrono::system_clock::now();
-        } 
+            // toggles the current phase of the traffic light between red and green
+            _currentPhase = (_currentPhase == TrafficLightPhase::red) ? TrafficLightPhase::green : TrafficLightPhase::red;
+
+            auto msg = _currentPhase; // copy value to be sent by the move semantics.
+            // sends an update method to the message queue using move semantics
+            _light_state_messages.send(std::move(msg));
+            // reset stop watch for next cycle
+            start_time = std::chrono::system_clock::now();
+        }
+
+        // sleep at every iteration to reduce CPU usage
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
