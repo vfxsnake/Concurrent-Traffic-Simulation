@@ -82,7 +82,7 @@ void TrafficLight::cycleThroughPhases()
     while (true) {
         // lap time
         auto lap_time = std::chrono::system_clock::now() - start_time;
-        if (lap_time.count() >= cycle_duration) 
+        if (std::chrono::duration_cast<std::chrono::microseconds>(lap_time).count() >= cycle_duration) 
         {
             // toggles the current phase of the traffic light between red and green
             _currentPhase = (_currentPhase == TrafficLightPhase::red) ? TrafficLightPhase::green : TrafficLightPhase::red;
