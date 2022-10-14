@@ -25,6 +25,7 @@ void MessageQueue<T>::send(T &&msg)
     // FP.4a : The method send should use the mechanisms std::lock_guard<std::mutex> 
     // as well as _condition.notify_one() to add a new message to the queue and afterwards send a notification.
     std::lock_guard<std::mutex> lock_guard(_mutex);
+    _queue.clear();
     _queue.emplace_back(msg);
     _condition.notify_one();
 }
@@ -71,8 +72,8 @@ void TrafficLight::cycleThroughPhases()
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
 
     // initalize variables
-    std::random_device random_device;
-    std::mt19937 engine(random_device());
+    static std::random_device random_device;
+    static std::mt19937 engine(random_device());
     std::uniform_int_distribution<> uniform_distribution(4000, 6000);
     
     // duration of a single simulation cycle in milliseconds.
